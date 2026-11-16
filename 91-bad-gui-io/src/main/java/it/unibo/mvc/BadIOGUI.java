@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.Random;
 
 /**
@@ -42,18 +42,17 @@ public class BadIOGUI {
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
-    
+
         final JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         canvas.add(panel);
 
         final JButton write = new JButton("Write on file");
+        final JButton read = new JButton("read");
         panel.add(write, BorderLayout.CENTER);
+        panel.add(read, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-
         /*
          * Handlers
          */
@@ -76,6 +75,22 @@ public class BadIOGUI {
                     }
                 }
             }
+        );
+
+        read.addActionListener(
+            new ActionListener() {
+                @Override 
+                public void actionPerformed(final ActionEvent print) {
+                    try {
+                        final String content = Files.readString(Path.of(PATH), StandardCharsets.UTF_8);
+                        IO.println(content);
+                    } catch (final IOException ex) {
+                        JOptionPane.showMessageDialog(frame, ex, "Error", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace(); // NOPMD: allowed as this is just an exercise
+                    } 
+                }
+            }
+
         );
     }
 
